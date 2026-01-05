@@ -1,0 +1,9 @@
+{
+  "manual_page": {
+    "welcome_text": "Welcome to Rimba Run!\n\nAvoid obstacles and\ncollect items to win."
+  },
+  "scene_three_page": {
+    "dialog_1": "Fuh, nasib baik kita\nsempat lari!",
+    "dialog_2": "Syukurlah kita selamat.\nIngat pesanan orang tua."
+  }
+}
