@@ -57,8 +57,7 @@ class ManualPage extends PositionComponent
       ));
 
     final textComponent = TextComponent(
-      text:
-          'Welcome to Rimba Run!\n\nAvoid obstacles and\ncollect items to win.',
+      text: game.textContent['manual_page']?['welcome_text'] ?? 'Welcome to Rimba Run!\n\nAvoid obstacles and\ncollect items to win.',
       textRenderer: TextPaint(
         style: GoogleFonts.lora(
           fontSize: 80,

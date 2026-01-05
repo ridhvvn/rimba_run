@@ -96,7 +96,7 @@ class NotaDetailPage extends PositionComponent with HasGameReference<FlutterWeb2
         sprite: backBtn,
         size: backBtn.originalSize * 0.4,
         position: Vector2(FlutterWeb2DGame.resolution.x * 0.1, FlutterWeb2DGame.resolution.y * 0.1),
-        onPressed: () => game.router.pushReplacementNamed('settings'),
+        onPressed: () => game.router.pushReplacementNamed('nota'),
       ));
 
       // Home Button (Utama)

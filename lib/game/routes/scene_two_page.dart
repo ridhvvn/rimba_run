@@ -4,16 +4,15 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:csv/csv.dart';
 import '../flutter_web_2d_game.dart';
 
 class QuestionData {
   final String questionText; // contoh
   final String correctAnswer; // peribahasa
   final List<String> options; // shuffled options
+  final String tahap;
 
-  QuestionData(this.questionText, this.correctAnswer, this.options);
+  QuestionData(this.questionText, this.correctAnswer, this.options, this.tahap);
 }
 
 class SceneTwoPage extends PositionComponent with HasGameReference<FlutterWeb2DGame> {
@@ -21,6 +20,7 @@ class SceneTwoPage extends PositionComponent with HasGameReference<FlutterWeb2DG
   late final TextBoxComponent questionTextComponent;
   late final TextBoxComponent optionsTextComponent;
   late final TextComponent questionNumberComponent;
+  late final TextComponent tahapComponent;
   
   // Pairs of components (Lari & Harimau)
   final List<List<SpriteComponent>> pairs = [];
@@ -66,13 +66,35 @@ class SceneTwoPage extends PositionComponent with HasGameReference<FlutterWeb2DG
     );
     add(questionNumberComponent);
 
+    // Tahap Indicator
+    tahapComponent = TextComponent(
+      text: '',
+      anchor: Anchor.centerLeft,
+      position: Vector2(140, 80),
+      textRenderer: TextPaint(
+        style: const TextStyle(
+          fontSize: 30,
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          shadows: [
+            Shadow(
+              blurRadius: 4,
+              color: Colors.black,
+              offset: Offset(2, 2),
+            ),
+          ],
+        ),
+      ),
+    );
+    add(tahapComponent);
+
     // Load Questions from CSV
-    await _loadQuestions();
+    _loadQuestions();
 
     if (_questions.isEmpty) {
       // Fallback if loading fails
       _questions = [
-        QuestionData('Loading Failed', 'A', ['A', 'B', 'C', 'D']),
+        QuestionData('Loading Failed', 'A', ['A', 'B', 'C', 'D'], 'Unknown'),
       ];
     }
 
@@ -207,47 +229,40 @@ class SceneTwoPage extends PositionComponent with HasGameReference<FlutterWeb2DG
 
   }
 
-  Future<void> _loadQuestions() async {
-    const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrkt2G-3z1GcIyE9SRHHBLXd-Xk5nZrmG_hjR60WDuRB0bI0KYBJiqVvIaPGc9K0U8Aov-MVzJkq9T/pub?output=csv';
+  void _loadQuestions() {
     try {
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        final List<List<dynamic>> rows = const CsvToListConverter().convert(response.body);
-        
-        // Columns: peribahasa (0), tahap (1), markah (2), contoh (3)
-        // Skip header row
-        final dataRows = rows.skip(1).toList();
-        
-        final List<Map<String, String>> allQuestions = [];
-        final List<String> allPeribahasa = [];
+      final dataRows = game.notaData;
+      
+      final List<Map<String, String>> allQuestions = [];
+      final List<String> allPeribahasa = [];
 
-        for (var row in dataRows) {
-          if (row.length >= 4) {
-            final peribahasa = row[0].toString();
-            final tahap = row[1].toString().toLowerCase();
-            final contoh = row[3].toString();
-            
-            allPeribahasa.add(peribahasa);
-            allQuestions.add({
-              'peribahasa': peribahasa,
-              'tahap': tahap,
-              'contoh': contoh,
-            });
-          }
+      for (var row in dataRows) {
+        if (row.length >= 4) {
+          final peribahasa = row[0].toString();
+          final tahap = row[1].toString().toLowerCase();
+          final contoh = row[3].toString();
+          
+          allPeribahasa.add(peribahasa);
+          allQuestions.add({
+            'peribahasa': peribahasa,
+            'tahap': tahap,
+            'contoh': contoh,
+          });
         }
+      }
 
-        // Filter by level
-        List<Map<String, String>> filteredQuestions = [];
-        if (game.currentLevel == 1) {
-          filteredQuestions = allQuestions.where((q) => q['tahap']!.contains('Mudah') || q['tahap']!.contains('Sederhana')).toList();
-        } else if (game.currentLevel == 2) {
-          filteredQuestions = allQuestions.where((q) => q['tahap']!.contains('Tinggi') || q['tahap']!.contains('Sukar')).toList();
-        } else {
-          filteredQuestions = allQuestions.where((q) => q['tahap']!.contains('Sangat Sukar')).toList();
-        }
+      // Filter by level
+      List<Map<String, String>> filteredQuestions = [];
+      if (game.currentLevel == 1) {
+        filteredQuestions = allQuestions.where((q) => q['tahap']!.contains('mudah') || q['tahap']!.contains('sederhana')).toList();
+      } else if (game.currentLevel == 2) {
+        filteredQuestions = allQuestions.where((q) => q['tahap']!.contains('tinggi') || q['tahap']!.contains('sukar')).toList();
+      } else {
+        filteredQuestions = allQuestions.where((q) => q['tahap']!.contains('sangat sukar')).toList();
+      }
 
-        // If no questions found for level, use all
-        if (filteredQuestions.isEmpty) filteredQuestions = allQuestions;
+      // If no questions found for level, use all
+      if (filteredQuestions.isEmpty) filteredQuestions = allQuestions;
 
         // Pick random questions (e.g., 5 questions per level)
         filteredQuestions.shuffle();
@@ -256,6 +271,7 @@ class SceneTwoPage extends PositionComponent with HasGameReference<FlutterWeb2DG
         _questions = selectedQuestions.map((q) {
           final correctAnswer = q['peribahasa']!;
           final questionText = q['contoh']!;
+          final tahap = q['tahap']!;
           
           // Generate options
           final options = <String>[correctAnswer];
@@ -264,12 +280,9 @@ class SceneTwoPage extends PositionComponent with HasGameReference<FlutterWeb2DG
           options.addAll(otherOptions.take(3));
           options.shuffle();
 
-          return QuestionData(questionText, correctAnswer, options);
+          return QuestionData(questionText, correctAnswer, options, tahap);
         }).toList();
 
-      } else {
-        debugPrint('Failed to load CSV: ${response.statusCode}');
-      }
     } catch (e) {
       debugPrint('Error loading CSV: $e');
     }
@@ -370,6 +383,7 @@ class SceneTwoPage extends PositionComponent with HasGameReference<FlutterWeb2DG
     final currentQ = _questions[_currentQuestionIndex];
     questionTextComponent.text = currentQ.questionText;
     questionNumberComponent.text = '${_currentQuestionIndex + 1}';
+    tahapComponent.text = 'Tahap: ${currentQ.tahap.toUpperCase()}';
     
     // Update options list text
     final labels = ['A', 'B', 'C', 'D'];

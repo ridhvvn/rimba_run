@@ -137,7 +137,7 @@ class WelcomePage extends PositionComponent with HasGameReference<FlutterWeb2DGa
         position: Vector2(100, 100),
         onPressed: () {
           // Shortcut to Map
-          game.router.pushReplacementNamed('nota');
+          game.router.pushReplacementNamed('scene2');
         },
       ));
     }

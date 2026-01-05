@@ -41,7 +41,7 @@ class SceneThreePage extends PositionComponent with HasGameReference<FlutterWeb2
 
     // 3. Text
     dialogText = TextComponent(
-      text: 'Fuh, nasib baik kita\nsempat lari!', // "Glad we made it"
+      text: game.textContent['scene_three_page']?['dialog_1'] ?? 'Fuh, nasib baik kita\nsempat lari!',
       textRenderer: TextPaint(
         style: GoogleFonts.lora(
           fontSize: 50,
@@ -94,7 +94,7 @@ class SceneThreePage extends PositionComponent with HasGameReference<FlutterWeb2
       goodChar.add(OpacityEffect.fadeIn(EffectController(duration: 0.5, startDelay: 0.5)));
 
       // Change Text
-      dialogText.text = 'Syukurlah kita selamat.\nIngat pesanan orang tua.'; // "Good/Lesson learned"
+      dialogText.text = game.textContent['scene_three_page']?['dialog_2'] ?? 'Syukurlah kita selamat.\nIngat pesanan orang tua.';
       
       _step++;
     } else {

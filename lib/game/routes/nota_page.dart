@@ -3,8 +3,6 @@ import 'package:flame/effects.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart' hide Route;
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
-import 'package:csv/csv.dart';
 import '../flutter_web_2d_game.dart';
 import 'package:flame/game.dart';
 import 'nota_detail_page.dart';
@@ -67,7 +65,7 @@ class NotaPage extends PositionComponent with HasGameReference<FlutterWeb2DGame>
       sprite: leftBtn,
       size: leftBtn.originalSize * 0.4,
       position: Vector2(FlutterWeb2DGame.resolution.x * 0.1, FlutterWeb2DGame.resolution.y * 0.1),
-      onPressed: () => game.router.pop(),
+      onPressed: () => game.router.pushReplacementNamed('settings'),
     ));
 
     // Home Button (Utama)
@@ -78,57 +76,43 @@ class NotaPage extends PositionComponent with HasGameReference<FlutterWeb2DGame>
       onPressed: () => game.router.pushReplacementNamed('welcome'),
     ));
 
-    // 5. Fetch Data
-    _fetchData(windowSize.x);
+    // 5. Load Data
+    _loadData(windowSize.x);
   }
 
-  Future<void> _fetchData(double cardWidth) async {
-    const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrkt2G-3z1GcIyE9SRHHBLXd-Xk5nZrmG_hjR60WDuRB0bI0KYBJiqVvIaPGc9K0U8Aov-MVzJkq9T/pub?output=csv';
-    try {
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        final List<List<dynamic>> rows = const CsvToListConverter().convert(response.body);
-        
-        // Skip header
-        final dataRows = rows.skip(1).toList();
-        
-        double currentY = 0;
-        final double spacing = 20;
-        
-        // Calculate card height based on aspect ratio to fit width
-        // Assuming list.png is a horizontal bar/card
-        final double cardHeight = listBgSprite.originalSize.y * (cardWidth / listBgSprite.originalSize.x);
-        final Vector2 cardSize = Vector2(cardWidth, cardHeight);
+  void _loadData(double cardWidth) {
+    final dataRows = game.notaData;
+    
+    double currentY = 0;
+    final double spacing = 20;
+    
+    // Calculate card height based on aspect ratio to fit width
+    // Assuming list.png is a horizontal bar/card
+    final double cardHeight = listBgSprite.originalSize.y * (cardWidth / listBgSprite.originalSize.x);
+    final Vector2 cardSize = Vector2(cardWidth, cardHeight);
 
-        int index = 1;
-        for (var row in dataRows) {
-          if (row.length >= 4) {
-            final peribahasa = row[0].toString();
-            final contoh = row[3].toString(); // Using column 3 for Contoh
-            
-            final card = NoteCard(
-              sprite: listBgSprite,
-              index: index,
-              peribahasa: peribahasa,
-              contoh: contoh,
-              size: cardSize,
-              position: Vector2(0, currentY),
-            );
-            
-            contentContainer.add(card);
-            currentY += cardSize.y + spacing;
-            index++;
-          }
-        }
+    int index = 1;
+    for (var row in dataRows) {
+      if (row.length >= 4) {
+        final peribahasa = row[0].toString();
+        final contoh = row[3].toString(); // Using column 3 for Contoh
         
-        _contentHeight = currentY;
-
-      } else {
-        debugPrint('Failed to load data');
+        final card = NoteCard(
+          sprite: listBgSprite,
+          index: index,
+          peribahasa: peribahasa,
+          contoh: contoh,
+          size: cardSize,
+          position: Vector2(0, currentY),
+        );
+        
+        contentContainer.add(card);
+        currentY += cardSize.y + spacing;
+        index++;
       }
-    } catch (e) {
-      debugPrint('Error: $e');
     }
+    
+    _contentHeight = currentY;
   }
 }
 

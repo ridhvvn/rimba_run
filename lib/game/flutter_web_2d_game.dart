@@ -12,10 +12,13 @@ import 'routes/scene_two_page.dart';
 import 'routes/scene_three_page.dart';
 import 'routes/victory_page.dart';
 import 'routes/nota_page.dart';
+import 'routes/loading_page.dart';
 
 class FlutterWeb2DGame extends FlameGame {
   static final Vector2 resolution = Vector2(1920, 1080);
   int currentLevel = 1;
+  List<List<dynamic>> notaData = [];
+  Map<String, dynamic> textContent = {};
 
   FlutterWeb2DGame()
       : super(
@@ -36,8 +39,9 @@ class FlutterWeb2DGame extends FlameGame {
     FlameAudio.bgm.initialize();
 
     router = RouterComponent(
-      initialRoute: 'welcome',
+      initialRoute: 'loading',
       routes: {
+        'loading': Route(LoadingPage.new),
         'welcome': Route(WelcomePage.new, maintainState: false),
         'manual': Route(ManualPage.new, maintainState: false),
         'game': Route(GamePage.new, maintainState: false),
