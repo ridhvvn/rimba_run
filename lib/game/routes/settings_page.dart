@@ -75,7 +75,7 @@ class SettingsPage extends PositionComponent with HasGameReference<FlutterWeb2DG
       sprite: notaBtn,
       size: notaBtn.originalSize,
       position: Vector2(FlutterWeb2DGame.resolution.x / 2, FlutterWeb2DGame.resolution.y * 0.5),
-      onPressed: () { /* TODO: Navigate to Nota */ },
+      onPressed: () => game.router.pushNamed('nota'),
     ));
 
     // Back Button (Utama)

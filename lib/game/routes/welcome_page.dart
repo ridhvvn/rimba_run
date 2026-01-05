@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/events.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 import '../components/ambient_dust.dart';
 import '../flutter_web_2d_game.dart';
@@ -105,7 +106,9 @@ class WelcomePage extends PositionComponent with HasGameReference<FlutterWeb2DGa
       sprite: button,
       size: button.originalSize,
       position: Vector2(FlutterWeb2DGame.resolution.x /2, FlutterWeb2DGame.resolution.y * 0.6),
-      onPressed: () => game.router.pushReplacementNamed('manual'),
+      onPressed: () {
+        game.router.pushReplacementNamed('manual');
+      },
     )
       ..add(ScaleEffect.to(
         Vector2.all(1.05), 
@@ -128,15 +131,59 @@ class WelcomePage extends PositionComponent with HasGameReference<FlutterWeb2DGa
     ));
 
     // Debug Shortcut Button (Toggle this for production)
-    const bool showDebugButton = true;
+    const bool showDebugButton = false;
     if (showDebugButton) {
       add(DebugButton(
         position: Vector2(100, 100),
         onPressed: () {
           // Shortcut to Map
-          game.router.pushReplacementNamed('scene1');
+          game.router.pushReplacementNamed('nota');
         },
       ));
+    }
+
+    // 8. Mute/Unmute Button
+    add(MuteButton(
+      position: Vector2(FlutterWeb2DGame.resolution.x * 0.1, FlutterWeb2DGame.resolution.y * 0.8),
+    ));
+  }
+}
+
+class MuteButton extends SpriteComponent with HasGameReference<FlutterWeb2DGame>, TapCallbacks {
+  MuteButton({required Vector2 position})
+      : super(position: position, anchor: Anchor.center);
+
+  late final Sprite muteSprite;
+  late final Sprite unmuteSprite;
+
+  @override
+  Future<void> onLoad() async {
+    muteSprite = await game.loadSprite('unmute.png');
+    unmuteSprite = await game.loadSprite('mute.png');
+    
+    // Set initial size based on the sprite
+    size = muteSprite.originalSize * 0.45; 
+    
+    // Sync initial state
+    _updateState();
+  }
+
+  @override
+  void onTapUp(TapUpEvent event) {
+    if (FlameAudio.bgm.isPlaying) {
+      FlameAudio.bgm.stop();
+      sprite = muteSprite;
+    } else {
+      FlameAudio.bgm.play('bg.mp3');
+      sprite = unmuteSprite;
+    }
+  }
+
+  void _updateState() {
+    if (FlameAudio.bgm.isPlaying) {
+      sprite = unmuteSprite;
+    } else {
+      sprite = muteSprite;
     }
   }
 }
