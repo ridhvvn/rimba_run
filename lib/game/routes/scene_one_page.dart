@@ -47,8 +47,9 @@ class SceneOnePage extends PositionComponent with HasGameReference<FlutterWeb2DG
     add(char2);
 
     // 5. Dialogue 1 (scene1b.png) - Near Character 1
+    final dialog1SpriteName = (game.currentLevel == 1) ? 'bear1.png' : 'scene1b.png';
     dialog1 = SpriteComponent(
-      sprite: await game.loadSprite('scene1b.png'),
+      sprite: await game.loadSprite(dialog1SpriteName),
       anchor: Anchor.bottomCenter,
       position: Vector2(FlutterWeb2DGame.resolution.x * 0.2, FlutterWeb2DGame.resolution.y * 0.85),
       size: Vector2(358, 191) * 1.5,
@@ -58,8 +59,9 @@ class SceneOnePage extends PositionComponent with HasGameReference<FlutterWeb2DG
     add(dialog1);
 
     // 6. Dialogue 2 (scene1c.png) - Near Character 2
+    final dialog2SpriteName = (game.currentLevel == 1) ? 'bear3.png' : 'scene1c.png';
     dialog2 = SpriteComponent(
-      sprite: await game.loadSprite('scene1c.png'),
+      sprite: await game.loadSprite(dialog2SpriteName),
       anchor: Anchor.bottomCenter,
       position: Vector2(FlutterWeb2DGame.resolution.x * 0.35, FlutterWeb2DGame.resolution.y * 0.85),
       size: Vector2(373, 180) * 1.5,

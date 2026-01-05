@@ -84,18 +84,64 @@ class MapPage extends PositionComponent with HasGameReference<FlutterWeb2DGame> 
     mipmapContainer.add(mipmapSpriteComponent);
     mapComponent.add(mipmapContainer);
 
+    // Prepare arrived sprite (if needed)
+    SpriteComponent? arrivedSpriteComponent;
+    if (game.currentLevel == 1 || game.currentLevel == 2) {
+      final arrivedSpriteName = 'mipmap1.png';
+      final arrivedSprite = await game.loadSprite(arrivedSpriteName);
+      
+      arrivedSpriteComponent = SpriteComponent(
+        sprite: arrivedSprite,
+        size: Vector2(100, 100),
+      );
+      // Start invisible
+      arrivedSpriteComponent.add(OpacityEffect.fadeOut(EffectController(duration: 0)));
+      
+      // Add bounce to arrived sprite too
+      arrivedSpriteComponent.add(
+        MoveEffect.by(
+          Vector2(0, -15),
+          EffectController(
+            duration: 0.6,
+            reverseDuration: 0.6,
+            infinite: true,
+            curve: Curves.easeInOut,
+          ),
+        ),
+      );
+      
+      mipmapContainer.add(arrivedSpriteComponent);
+    }
+
     // Animate along the path segments
     if (startIdx < endIdx) {
-      final List<Effect> moveEffects = [];
+      final List<Effect> sequenceEffects = [];
+      
+      // 1. Movement Effects
       for (int i = startIdx + 1; i <= endIdx; i++) {
-        moveEffects.add(
+        sequenceEffects.add(
           MoveToEffect(
             pathPoints[i],
             EffectController(duration: 1.0, curve: Curves.linear),
           ),
         );
       }
-      mipmapContainer.add(SequenceEffect(moveEffects));
+
+      // 2. Fade Effect (only for Level 1 & 2)
+      if (arrivedSpriteComponent != null) {
+        sequenceEffects.add(
+          MoveEffect.by(
+            Vector2.zero(),
+            EffectController(duration: 0),
+            onComplete: () {
+              mipmapSpriteComponent.add(OpacityEffect.fadeOut(EffectController(duration: 0.5)));
+              arrivedSpriteComponent!.add(OpacityEffect.fadeIn(EffectController(duration: 0.5)));
+            },
+          ),
+        );
+      }
+
+      mipmapContainer.add(SequenceEffect(sequenceEffects));
     }
 
     // 4. Next Button (Enter Level)

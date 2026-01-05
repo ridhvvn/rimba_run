@@ -126,7 +126,43 @@ class WelcomePage extends PositionComponent with HasGameReference<FlutterWeb2DGa
       position: Vector2(FlutterWeb2DGame.resolution.x * 0.9, FlutterWeb2DGame.resolution.y * 0.8),
       onPressed: () => game.router.pushNamed('settings'),
     ));
+
+    // Debug Shortcut Button (Toggle this for production)
+    const bool showDebugButton = true;
+    if (showDebugButton) {
+      add(DebugButton(
+        position: Vector2(100, 100),
+        onPressed: () {
+          // Shortcut to Map
+          game.router.pushReplacementNamed('scene1');
+        },
+      ));
+    }
   }
+}
+
+class DebugButton extends PositionComponent with TapCallbacks {
+  final VoidCallback onPressed;
+
+  DebugButton({required Vector2 position, required this.onPressed})
+      : super(position: position, size: Vector2(120, 50), anchor: Anchor.center);
+
+  @override
+  Future<void> onLoad() async {
+    add(RectangleComponent(
+      size: size,
+      paint: Paint()..color = Colors.red.withOpacity(0.8),
+    ));
+    add(TextComponent(
+      text: 'DEBUG: MAP',
+      anchor: Anchor.center,
+      position: size / 2,
+      textRenderer: TextPaint(style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold)),
+    ));
+  }
+
+  @override
+  void onTapUp(TapUpEvent event) => onPressed();
 }
 
 class MenuButton extends SpriteComponent with HasGameReference<FlutterWeb2DGame>, TapCallbacks {
