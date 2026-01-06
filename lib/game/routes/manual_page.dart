@@ -47,24 +47,27 @@ class ManualPage extends PositionComponent
           FlutterWeb2DGame.resolution.y * 1.1),
       scale: Vector2.all(0.0),
     )..add(RotateEffect.by(
-      0.035, 
-      EffectController(
-        duration: 2.0, 
-        reverseDuration: 3.0, 
-        infinite: true, 
-        curve: Curves.easeInOut,
-      ),
+        0.035,
+        EffectController(
+          duration: 2.0,
+          reverseDuration: 3.0,
+          infinite: true,
+          curve: Curves.easeInOut,
+        ),
       ));
 
-    final textComponent = TextComponent(
-      text: game.textContent['manual_page']?['welcome_text'] ?? 'Welcome to Rimba Run!\n\nAvoid obstacles and\ncollect items to win.',
+    final textComponent = TextBoxComponent(
+      text: game.textContent['manual_page']?['welcome_text'] ??
+          'Welcome to Rimba Run!\n\nAvoid obstacles and\ncollect items to win.',
       textRenderer: TextPaint(
         style: GoogleFonts.lora(
-          fontSize: 80,
-          color: Colors.black, // Dark text for dialog
+          fontSize: 35,
+          color: const Color.fromARGB(255, 76, 40, 11),
           fontWeight: FontWeight.bold,
         ),
       ),
+      boxConfig: TextBoxConfig(maxWidth: 900),
+      align: Anchor.center,
       anchor: Anchor.center,
       position: Vector2(FlutterWeb2DGame.resolution.x * 0.4,
           FlutterWeb2DGame.resolution.y * 0.5),

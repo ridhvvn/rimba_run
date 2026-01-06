@@ -1,6 +1,6 @@
 {
   "manual_page": {
-    "welcome_text": "Welcome to Rimba Run!\n\nAvoid obstacles and\ncollect items to win."
+    "welcome_text": "-Baca misi yang perlu kamu selesaikan.\n-Kamu boleh rujuk nota yang disediakan untuk membantu.\n-Jawab soalan satu demi satu mengikut turutan.\n-Jika jawapan salah, cuba lagi sampai betul.\n-Selesaikan semua soalan untuk menyelamatkan harta karun kamu!"
   },
   "scene_three_page": {
     "dialog_1": "Fuh, nasib baik kita\nsempat lari!",
