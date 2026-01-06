@@ -4,6 +4,7 @@ import 'package:flame/events.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../components/ambient_dust.dart';
 import '../flutter_web_2d_game.dart';
 
 class SceneThreePage extends PositionComponent with HasGameReference<FlutterWeb2DGame> {
@@ -29,6 +30,9 @@ class SceneThreePage extends PositionComponent with HasGameReference<FlutterWeb2
       anchor: Anchor.center,
       position: FlutterWeb2DGame.resolution / 2,
     ));
+
+    // Ambient Dust
+    add(AmbientDust(count: 50));
 
     // 2. Dialog Box
     dialog = SpriteComponent(

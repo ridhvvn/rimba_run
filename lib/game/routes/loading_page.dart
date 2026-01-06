@@ -5,12 +5,16 @@ import 'dart:convert';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:csv/csv.dart';
+import '../components/ambient_dust.dart';
 import '../flutter_web_2d_game.dart';
 
 class LoadingPage extends PositionComponent with HasGameReference<FlutterWeb2DGame> {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+
+    // Ambient Dust
+    add(AmbientDust(count: 50));
 
     // Add a simple loading text
     add(TextComponent(

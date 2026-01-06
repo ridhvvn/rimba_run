@@ -3,6 +3,7 @@ import 'package:flame/effects.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart' hide Route;
 import 'package:google_fonts/google_fonts.dart';
+import '../components/ambient_dust.dart';
 import '../flutter_web_2d_game.dart';
 import 'package:flame/game.dart';
 import 'nota_detail_page.dart';
@@ -30,6 +31,9 @@ class NotaPage extends PositionComponent with HasGameReference<FlutterWeb2DGame>
       anchor: Anchor.center,
       position: FlutterWeb2DGame.resolution / 2,
     ));
+
+    // Ambient Dust
+    add(AmbientDust(count: 50));
 
     // 2. Scrollable Area Setup
     // We want a central window to scroll through the cards

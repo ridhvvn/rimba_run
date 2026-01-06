@@ -2,6 +2,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
+import '../components/ambient_dust.dart';
 import '../flutter_web_2d_game.dart';
 
 class EndPage extends PositionComponent with HasGameReference<FlutterWeb2DGame> {
@@ -14,6 +15,9 @@ class EndPage extends PositionComponent with HasGameReference<FlutterWeb2DGame> 
       sprite: await game.loadSprite('background.png'),
       size: FlutterWeb2DGame.resolution,
     ));
+
+    // Ambient Dust
+    add(AmbientDust(count: 50));
 
     // 2. Dark Overlay (to make it a bit dark)
     add(RectangleComponent(

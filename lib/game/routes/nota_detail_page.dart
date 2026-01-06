@@ -4,6 +4,7 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart' hide Route;
 import 'package:google_fonts/google_fonts.dart';
+import '../components/ambient_dust.dart';
 import '../flutter_web_2d_game.dart';
 import 'nota_page.dart';
 
@@ -32,6 +33,9 @@ class NotaDetailPage extends PositionComponent with HasGameReference<FlutterWeb2
         anchor: Anchor.center,
         position: FlutterWeb2DGame.resolution / 2,
       ));
+
+      // Ambient Dust
+      add(AmbientDust(count: 50));
 
       // 2. Dialog Box
       final dialogComponent = SpriteComponent(

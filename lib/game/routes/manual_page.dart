@@ -27,6 +27,9 @@ class ManualPage extends PositionComponent
       position: FlutterWeb2DGame.resolution / 2,
     ));
 
+    // Ambient Dust
+    add(AmbientDust(count: 50));
+
     // Components to animate
     final dialogComponent = SpriteComponent(
       sprite: dialog,

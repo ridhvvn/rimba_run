@@ -3,6 +3,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
+import '../components/ambient_dust.dart';
 import '../flutter_web_2d_game.dart';
 
 class SceneOnePage extends PositionComponent with HasGameReference<FlutterWeb2DGame> {
@@ -78,6 +79,9 @@ class SceneOnePage extends PositionComponent with HasGameReference<FlutterWeb2DG
       size: Vector2(701, 1080),
     ));
 
+    // Ambient Dust
+    add(AmbientDust(count: 50));
+    
     // Animation Sequence
     
     // Pair 1: scene1a (char1) and scene1b (dialog1)

@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
+import '../components/ambient_dust.dart';
 import '../flutter_web_2d_game.dart';
 
 class QuestionData {
@@ -42,6 +43,9 @@ class SceneTwoPage extends PositionComponent with HasGameReference<FlutterWeb2DG
       sprite: await game.loadSprite('background3.png'),
       size: FlutterWeb2DGame.resolution,
     ));
+
+    // Ambient Dust
+    add(AmbientDust(count: 50));
 
     // Question Number Indicator
     final numberBg = CircleComponent(

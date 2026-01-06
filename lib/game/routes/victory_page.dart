@@ -5,6 +5,7 @@ import 'package:flame/events.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/particles.dart';
 import 'package:flutter/material.dart';
+import '../components/ambient_dust.dart';
 import '../flutter_web_2d_game.dart';
 
 class VictoryPage extends PositionComponent with HasGameReference<FlutterWeb2DGame> {
@@ -17,6 +18,9 @@ class VictoryPage extends PositionComponent with HasGameReference<FlutterWeb2DGa
       sprite: await game.loadSprite('background4.png'),
       size: FlutterWeb2DGame.resolution,
     ));
+
+    // Ambient Dust
+    add(AmbientDust(count: 50));
 
     // 2. Confetti Spawner
     final rnd = Random();
